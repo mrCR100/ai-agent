@@ -1,3 +1,4 @@
+import json
 import os
 import speech_recognition as sr
 from vosk import KaldiRecognizer, Model
@@ -10,8 +11,8 @@ def recognize_by_vosk(vosk_model, audio_data):
 
     rec = KaldiRecognizer(vosk_model, 16000)
     rec.AcceptWaveform(audio_data.get_raw_data(convert_rate=16000, convert_width=2))
-    final_recognition = rec.FinalResult()
-    return final_recognition
+    final_recognition = json.loads(rec.FinalResult())
+    return final_recognition["text"]
 
 
 class VoiceRecognizer(object):
