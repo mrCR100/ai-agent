@@ -36,14 +36,29 @@ def provide_beef():
     """执行动作002"""
     print("perform action 002")
 
+def provide_food():
+    """执行动作003"""
+    print("perform action 003")
+
+def provide_book():
+    """执行动作004"""
+    print("perform action 004")
+
+def map_search():
+    """执行动作005"""
+    print("perform action 005")
+
 def wait():
     """执行动作000"""
-    print("perform action 000")
+    print("perform action 006")
 
 functions = {
     "000": wait,
     "001": fetch_drinks,
-    "002": provide_beef
+    "002": provide_beef,
+    "003": provide_food,
+    "004": provide_book,
+    "005": map_search,
 }
 
 

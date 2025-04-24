@@ -8,18 +8,40 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import ChatOllama
 from langchain.vectorstores import FAISS
-import speech_recognition as sr
-import voice
+# import speech_recognition as sr
+# import voice
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 
 # llm deployed on local labs.
-LLM_URL = "http://100.84.115.22:32123"
+LLM_URL = "http://100.84.67.139:32123"
 LLM_MODEL = "deepseek-r1:1.5b"
 # LLM_MODEL = "llama3.2:1b"
 
 
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
+
+user_prompt = ""
+
+app = Flask(__name__)
+CORS(app)
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    global user_prompt
+    if request.is_json:
+        user_prompt = request.get_json()
+        print("Received JSON format prompt:", user_prompt)
+        response = rag_chain.invoke({"question": user_prompt["message"] + "---根据分析输出合适的需要执行的动作编号"})
+        print(response)
+        ae.run(response)
+        return jsonify({"status": "success", "response": response}), 200
+    else:
+        return jsonify({"status": "error", "message": "Request must be JSON"}), 400
 
 
 if __name__ == "__main__":
@@ -43,26 +65,28 @@ if __name__ == "__main__":
     # )
 
     retriever = vector_store.as_retriever()
-    prompt = hub.pull("rlm/rag-prompt")
+    rag_prompt = hub.pull("rlm/rag-prompt")
 
     ae = action.ActionExecutor()
     rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough()}
-            | prompt
+            | rag_prompt
             | llm
             | StrOutputParser()
     )
 
-    vr = voice.VoiceRecognizer()
-    while True:
-        prompt = vr.recognize_speech_from_mic(sr.Recognizer(), sr.Microphone())
-        if prompt == "":
-            continue
-        # just for debug
-        # prompt = "我有点饿了"
-        print("You said: " + prompt)
 
-        response = rag_chain.invoke({"question": prompt + "---根据分析输出合适的需要执行的动作编号"})
-        # agent.run(response)
-        print(response)
-        ae.run(response)
+    app.run(debug=True)
+    # vr = voice.VoiceRecognizer()
+    # while True:
+        # prompt = vr.recognize_speech_from_mic(sr.Recognizer(), sr.Microphone())
+        # if prompt == "":
+        #     continue
+        # # just for debug
+        # # user_prompt = "我有点饿了"
+        # print("You said: " + user_prompt)
+
+        # response = rag_chain.invoke({"question": user_prompt + "---根据分析输出合适的需要执行的动作编号"})
+        # # agent.run(response)
+        # print(response)
+        # ae.run(response)
