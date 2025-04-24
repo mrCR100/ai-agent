@@ -5,6 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>同济大学科学中心智能体</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes pulse {
@@ -37,26 +71,63 @@
         .pulse-animation {
             animation: pulse 1.5s infinite;
         }
+        .gradient-bg {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+        }
+        .gradient-header {
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+        }
+        .gradient-input {
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+        .gradient-btn {
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+        }
+        .glass-effect {
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .custom-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .custom-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="gradient-bg h-screen flex flex-col">
     <!-- Header -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
+    <header class="gradient-header text-white p-4 shadow-lg">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-                    <i class="fas fa-flask text-xl"></i>
+                <!-- Custom Image Placeholder -->
+                <div class="custom-image">
+                    <img src="images/lab_logo.jpg" alt="Custom Logo">
                 </div>
-                <h1 class="text-xl font-bold">聊天演示</h1>
+                <div>
+                    <h1 class="text-xl font-bold">演示</h1>
+                    <p class="text-xs opacity-80">同济大学科学中心智能体</p>
+                </div>
             </div>
             <div class="flex space-x-4">
-                <button class="p-2 rounded-full hover:bg-blue-500 transition">
+                <button class="p-2 rounded-full hover:bg-white/10 transition">
                     <i class="fas fa-cog"></i>
                 </button>
-                <button class="p-2 rounded-full hover:bg-blue-500 transition">
+                <button class="p-2 rounded-full hover:bg-white/10 transition">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button class="p-2 rounded-full hover:bg-blue-500 transition">
+                <button class="p-2 rounded-full hover:bg-white/10 transition">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
             </div>
@@ -66,7 +137,7 @@
     <!-- Main Chat Area -->
     <main class="flex-1 overflow-hidden container mx-auto p-4 flex flex-col">
         <!-- Chat Messages -->
-        <div id="chat-messages" class="flex-1 overflow-y-auto scrollbar-hide space-y-4 mb-4">
+        <div id="chat-messages" class="flex-1 overflow-y-auto scrollbar-hide space-y-4 mb-4 bg-white rounded-xl p-4 shadow-sm">
             <!-- Welcome Message -->
             <div class="message-enter flex space-x-3">
                 <div class="flex-shrink-0">
@@ -74,12 +145,15 @@
                         <i class="fas fa-robot text-blue-600"></i>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm max-w-3xl">
-                    <p class="font-medium text-blue-600">试验智能体</p>
-                    <p class="mt-1 text-gray-700">你好！我是来自同济大学人工智能实验室的试验智能体。</p>
+                <div class="glass-effect p-4 rounded-lg max-w-3xl">
+                    <p class="font-medium text-gray-800">家庭小助手</p>
+                    <p class="mt-1 text-gray-600">你好！我来自同济大学科学中心，很高兴帮助你。</p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         <button class="suggestion-btn px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm hover:bg-blue-100 transition">
-                            Describe your feeling on your body
+                            <i class="fas fa-lightbulb mr-1"></i> 我感到口渴
+                        </button>
+                        <button class="suggestion-btn px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm hover:bg-blue-100 transition">
+                            <i class="fas fa-lightbulb mr-1"></i> 我感到饥饿
                         </button>
                     </div>
                 </div>
@@ -87,38 +161,42 @@
         </div>
 
         <!-- Input Area -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <div class="p-3 border-b border-gray-100 flex items-center space-x-2">
-                <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+        <div class="gradient-input rounded-xl shadow-lg">
+            <div class="p-3 border-b border-gray-200 flex items-center space-x-2">
+                <button class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-100 transition">
                     <i class="fas fa-plus"></i>
                 </button>
-                <button id="mic-btn" class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+                <button id="mic-btn" class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-100 transition">
                     <i class="fas fa-microphone"></i>
                 </button>
-                <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+                <button class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-100 transition">
                     <i class="fas fa-image"></i>
+                </button>
+                <button class="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-100 transition">
+                    <i class="fas fa-paperclip"></i>
                 </button>
                 <div id="recording-indicator" class="hidden items-center ml-2">
                     <div class="w-2 h-2 rounded-full bg-red-500 mr-2 pulse-animation"></div>
-                    <span class="text-xs text-gray-500">Recording...</span>
+                    <span class="text-xs text-gray-500">录音中...</span>
                 </div>
             </div>
             <div class="relative">
                 <textarea 
                     id="user-input" 
-                    class="w-full p-4 pr-16 focus:outline-none resize-none" 
-                    placeholder="Message TongJi AI Assistant..." 
+                    class="w-full p-4 pr-16 focus:outline-none resize-none bg-white" 
+                    placeholder="输入消息给家庭助手..." 
                     rows="1"
                     style="min-height: 60px; max-height: 200px;"></textarea>
-                <button id="send-btn" class="absolute right-3 bottom-3 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <button id="send-btn" class="gradient-btn absolute right-3 bottom-3 w-10 h-10 rounded-full text-white flex items-center justify-center hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md" disabled>
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
         </div>
 
         <!-- Footer Note -->
-        <p class="text-xs text-gray-500 text-center mt-3">
-            Connected to local AI agent
+        <p class="text-xs text-gray-600 text-center mt-3 flex items-center justify-center">
+            <span class="inline-block w-2 h-2 rounded-full bg-green-400 mr-2"></span>
+            <span>已连接到算力机房</span>
         </p>
     </main>
 
@@ -140,7 +218,7 @@
                 recognition = new webkitSpeechRecognition();
                 recognition.continuous = false;
                 recognition.interimResults = true;
-                recognition.lang = 'en-US';
+                recognition.lang = 'zh-CN';
 
                 recognition.onstart = function() {
                     isRecording = true;
@@ -178,7 +256,7 @@
                 };
             } else {
                 micBtn.disabled = true;
-                micBtn.title = "Speech recognition not supported in your browser";
+                micBtn.title = "您的浏览器不支持语音识别";
             }
 
             function stopRecording() {
@@ -236,7 +314,7 @@
             // Handle suggestion buttons
             suggestionBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    userInput.value = this.textContent;
+                    userInput.value = this.textContent.replace(/<[^>]*>/g, '').trim();
                     userInput.style.height = 'auto';
                     userInput.style.height = (userInput.scrollHeight) + 'px';
                     sendBtn.disabled = false;
@@ -277,10 +355,9 @@
                     removeTypingIndicator();
                     addMessage('assistant', data.response || "I received your message but didn't get a proper response from the server.");
                 } catch (error) {
-                    addMessage('assistant', error.body)
                     console.error('Error calling DeepSeek API:', error);
                     removeTypingIndicator();
-                    addMessage('assistant', "Sorry, I couldn't connect to the DeepSeek server. Please check your connection and try again.");
+                    addMessage('assistant', "There is something went wrong! Please check the browser console for more details.");
                 }
             }
 
@@ -291,13 +368,13 @@
                 if (role === 'user') {
                     messageDiv.innerHTML = `
                         <div class="flex-shrink-0">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                                <i class="fas fa-user text-gray-600"></i>
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-user text-blue-600"></i>
                             </div>
                         </div>
-                        <div class="bg-blue-50 p-4 rounded-lg shadow-sm max-w-3xl">
-                            <p class="font-medium text-blue-600">You</p>
-                            <p class="mt-1 text-gray-700 whitespace-pre-wrap">${content}</p>
+                        <div class="glass-effect p-4 rounded-lg max-w-3xl">
+                            <p class="font-medium text-gray-800">您</p>
+                            <p class="mt-1 text-gray-600 whitespace-pre-wrap">${content}</p>
                         </div>
                     `;
                 } else {
@@ -307,14 +384,14 @@
                                 <i class="fas fa-robot text-blue-600"></i>
                             </div>
                         </div>
-                        <div class="bg-white p-4 rounded-lg shadow-sm max-w-3xl">
-                            <p class="font-medium text-blue-600">TongJi AI</p>
-                            <p class="mt-1 text-gray-700 whitespace-pre-wrap">${content}</p>
-                            <div class="mt-3 flex space-x-3 text-sm text-gray-500">
-                                <button class="hover:text-blue-600"><i class="fas fa-thumbs-up"></i></button>
-                                <button class="hover:text-blue-600"><i class="fas fa-thumbs-down"></i></button>
-                                <button class="hover:text-blue-600"><i class="fas fa-redo"></i></button>
-                                <button class="hover:text-blue-600"><i class="fas fa-copy"></i></button>
+                        <div class="glass-effect p-4 rounded-lg max-w-3xl">
+                            <p class="font-medium text-gray-800">家庭助手</p>
+                            <p class="mt-1 text-gray-600 whitespace-pre-wrap">${content}</p>
+                            <div class="mt-3 flex space-x-3 text-sm text-gray-400">
+                                <button class="hover:text-blue-600 transition"><i class="fas fa-thumbs-up"></i></button>
+                                <button class="hover:text-blue-600 transition"><i class="fas fa-thumbs-down"></i></button>
+                                <button class="hover:text-blue-600 transition"><i class="fas fa-redo"></i></button>
+                                <button class="hover:text-blue-600 transition"><i class="fas fa-copy"></i></button>
                             </div>
                         </div>
                     `;
@@ -334,8 +411,8 @@
                             <i class="fas fa-robot text-blue-600"></i>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-sm max-w-xs">
-                        <div class="typing-indicator text-gray-500">TongJi AI is typing</div>
+                    <div class="glass-effect p-4 rounded-lg max-w-xs">
+                        <div class="typing-indicator text-gray-500">家庭助手正在处理用户请求...</div>
                     </div>
                 `;
                 chatMessages.appendChild(typingDiv);
