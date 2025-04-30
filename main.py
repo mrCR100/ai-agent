@@ -76,7 +76,7 @@ if __name__ == "__main__":
     )
 
 
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
     # vr = voice.VoiceRecognizer()
     # while True:
         # prompt = vr.recognize_speech_from_mic(sr.Recognizer(), sr.Microphone())

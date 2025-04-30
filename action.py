@@ -50,7 +50,7 @@ def map_search():
 
 def wait():
     """执行动作000"""
-    print("perform action 006")
+    print("perform action 000")
 
 functions = {
     "000": wait,
