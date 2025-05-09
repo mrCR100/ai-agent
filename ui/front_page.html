@@ -242,7 +242,7 @@
                     <i class="fas fa-star mr-2 text-yellow-400"></i>
                     回答质量评估
                 </h2>
-                <p class="text-sm text-gray-500 mt-1">由GPT-4模型实时评估</p>
+                <p class="text-sm text-gray-500 mt-1">由Deepseek模型实时评估</p>
             </div>
             <div id="evaluation-content" class="flex-1 overflow-y-auto p-4">
                 <div class="text-center py-8 text-gray-400">
@@ -273,7 +273,7 @@
             let recognition;
             let isRecording = false;
             let finalTranscript = '';
-            let lastAssistantMessage = '';
+            let serviceMessage = '';
 
             // Check if browser supports speech recognition
             if ('webkitSpeechRecognition' in window) {
@@ -386,8 +386,8 @@
 
             // Handle refresh evaluation button
             refreshEvaluationBtn.addEventListener('click', function() {
-                if (lastAssistantMessage) {
-                    evaluateResponse(lastAssistantMessage);
+                if (serviceMessage) {
+                    evaluateResponse(response);
                 }
             });
 
@@ -406,7 +406,7 @@
 
                 try {
                     // Send message to local ai agent.
-                    const response = await fetch('http://100.84.115.22:30123/chat', {
+                    const response = await fetch('http://127.0.0.1:5000/chat', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -422,14 +422,14 @@
 
                     const data = await response.json();
                     removeTypingIndicator();
-                    addMessage('assistant', data.response || "I received your message but didn't get a proper response from the server.");
+                    addMessage('assistant', data.service_response || "I received your message but didn't get a proper response from the server.");
                     
                     // Store the last assistant message for evaluation
-                    lastAssistantMessage = data.response || "";
+                    serviceMessage = data.service_response || "";
                     
                     // Evaluate the response
-                    if (lastAssistantMessage) {
-                        evaluateResponse(lastAssistantMessage);
+                    if (response.ok) {
+                        evaluateResponse(data);
                     }
                 } catch (error) {
                     console.error('Error calling DeepSeek API:', error);
@@ -438,7 +438,7 @@
                 }
             }
 
-            async function evaluateResponse(response) {
+            async function evaluateResponse(data) {
                 // Show evaluating indicator
                 evaluationContent.innerHTML = `
                     <div class="text-center py-8">
@@ -452,9 +452,7 @@
                 `;
 
                 try {
-                    // Simulate calling an evaluation API (replace with actual API call)
-                    // In a real implementation, you would call your evaluation model API here
-                    const evaluationResult = await simulateEvaluationAPI(response);
+                    const evaluationResult = await judgeEvaluation(data);
                     
                     // Display evaluation result
                     displayEvaluationResult(evaluationResult);
@@ -469,96 +467,25 @@
                 }
             }
 
-            function simulateEvaluationAPI(response) {
-                // This is a simulation - in a real implementation, you would call your evaluation API
+            function judgeEvaluation(data) {
                 return new Promise(resolve => {
                     setTimeout(() => {
-                        // Generate a random score between 70-100 for demonstration
-                        const score = Math.floor(Math.random() * 31) + 70;
-                        
-                        // Generate evaluation feedback based on score
-                        let feedback = "";
-                        let colorClass = "";
-                        
-                        if (score >= 90) {
-                            colorClass = "bg-green-100 text-green-800";
-                            feedback = "回答非常出色！内容全面、准确且表达清晰，完全解决了用户的问题。";
-                        } else if (score >= 80) {
-                            colorClass = "bg-blue-100 text-blue-800";
-                            feedback = "回答质量良好，涵盖了主要要点，但某些细节可以进一步完善。";
-                        } else if (score >= 70) {
-                            colorClass = "bg-yellow-100 text-yellow-800";
-                            feedback = "回答基本正确，但可能缺少一些关键细节或不够全面。";
-                        } else {
-                            colorClass = "bg-red-100 text-red-800";
-                            feedback = "回答存在明显问题，可能需要重新考虑或补充更多信息。";
-                        }
-                        
-                        // Generate specific feedback points
-                        const strengths = [
-                            "回答逻辑清晰",
-                            "内容准确无误",
-                            "表达简洁明了",
-                            "解决了用户的核心问题"
-                        ].sort(() => 0.5 - Math.random()).slice(0, 2);
-                        
-                        const improvements = [
-                            "可以增加更多细节",
-                            "某些表述可以更精确",
-                            "可以考虑更多使用场景",
-                            "可以添加示例说明"
-                        ].sort(() => 0.5 - Math.random()).slice(0, 2);
-                        
+                        let feedback = '';
                         resolve({
-                            score,
-                            colorClass,
-                            feedback,
-                            strengths,
-                            improvements
+                            feedback: data.judge_response,
                         });
                     }, 1500);
                 });
             }
 
             function displayEvaluationResult(result) {
-                evaluationContent.innerHTML = `
-                    <div class="text-center mb-6">
-                        <div class="evaluation-score ${result.colorClass} mx-auto mb-3">${result.score}</div>
-                        <p class="text-sm font-medium text-gray-700">综合评分 (100分制)</p>
-                    </div>
-                    
+                evaluationContent.innerHTML = `                    
                     <div class="mb-6">
                         <h3 class="font-medium text-gray-800 mb-2 flex items-center">
                             <i class="fas fa-check-circle text-green-500 mr-2"></i>
                             总体评价
                         </h3>
                         <p class="text-gray-600 text-sm">${result.feedback}</p>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <h3 class="font-medium text-gray-800 mb-2 flex items-center">
-                            <i class="fas fa-thumbs-up text-blue-500 mr-2"></i>
-                            优点
-                        </h3>
-                        <ul class="text-gray-600 text-sm space-y-1">
-                            ${result.strengths.map(item => `<li class="flex items-start">
-                                <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
-                                <span>${item}</span>
-                            </li>`).join('')}
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-medium text-gray-800 mb-2 flex items-center">
-                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
-                            改进建议
-                        </h3>
-                        <ul class="text-gray-600 text-sm space-y-1">
-                            ${result.improvements.map(item => `<li class="flex items-start">
-                                <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 text-xs"></i>
-                                <span>${item}</span>
-                            </li>`).join('')}
-                        </ul>
                     </div>
                 `;
             }

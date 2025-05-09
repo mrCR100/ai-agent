@@ -4,6 +4,7 @@ import speech_recognition as sr
 from vosk import KaldiRecognizer, Model
 
 
+# temp no use, since llm can recognize multi input.
 def recognize_by_vosk(vosk_model, audio_data):
     assert isinstance(audio_data, sr.AudioData), "Data must be audio data"
     if not os.path.exists("model"):
